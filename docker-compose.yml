@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  ocr-converter:
+    build: .
+    container_name: ocr-converter
+    volumes:
+      - ./input:/input      # 放入你的PPT/PDF文件
+      - ./output:/output    # 输出的Markdown文件
+      - ./scripts:/app/scripts
+    stdin_open: true
+    tty: true
+    environment:
+      - PYTHONUNBUFFERED=1

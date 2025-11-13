@@ -1,0 +1,26 @@
+# 输入输出目录
+input/*
+output/*
+
+# 但保留目录本身
+!input/.gitkeep
+!output/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.venv/
+venv/
+
+# Docker
+.dockerignore
+
+# 临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
