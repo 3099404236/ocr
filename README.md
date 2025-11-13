@@ -2,24 +2,58 @@
 
 这个Docker容器可以将PPT和PDF文件转换为Markdown格式，方便喂给AI处理。
 
+## 🎮 两个版本可选
+
+### GPU版 (推荐 - 如果你有NVIDIA GPU) ⚡
+- 使用 **GOT-OCR 2.0** (580M参数，OCR-2.0架构)
+- 速度快10-15倍
+- 仅需4GB显存，22GB完全够用
+- 详见 `QUICKSTART_GPU.md`
+
+### CPU版 (无GPU时使用)
+- 使用 **Marker + Surya OCR**
+- 不需要GPU，通用性好
+- 详见 `QUICKSTART.md`
+
 ## 功能特点
 
 - ✅ PPT/PPTX → PDF → Markdown 全流程转换
-- ✅ 使用 **Marker** (优先) 和 **PaddleOCR** (备选) 双引擎OCR
+- ✅ **GPU版**: GOT-OCR 2.0 (主) + PaddleOCR GPU (备选)
+- ✅ **CPU版**: Marker + Surya (主) + PaddleOCR (备选)
 - ✅ 支持中英文识别，中文识别准确率高
 - ✅ Docker容器化，不污染主机环境
 - ✅ 支持单文件和批量转换
 
 ## 快速开始
 
-### 1. 构建Docker镜像
+### GPU版 (推荐 - 如果有NVIDIA GPU)
 
 ```bash
 cd /path/to/ocr
-docker-compose build
+
+# 安装NVIDIA Container Toolkit (一次性)
+# 详见 QUICKSTART_GPU.md
+
+# 构建GPU版镜像
+docker-compose -f docker-compose.gpu.yml build
+
+# 转换文件
+docker-compose -f docker-compose.gpu.yml run --rm ocr-converter-gpu \
+    python /app/scripts/ppt_to_markdown_gpu.py /input/课件.pptx /output
 ```
 
-第一次构建需要几分钟，请耐心等待。
+### CPU版 (无GPU时使用)
+
+```bash
+cd /path/to/ocr
+
+# 构建CPU版镜像
+docker-compose build
+
+# 转换文件
+docker-compose run --rm ocr-converter \
+    python /app/scripts/ppt_to_markdown.py /input/课件.pptx /output
+```
 
 ### 2. 准备文件
 

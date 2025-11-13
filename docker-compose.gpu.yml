@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  ocr-converter-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    container_name: ocr-converter-gpu
+    runtime: nvidia  # 使用NVIDIA runtime
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - PYTHONUNBUFFERED=1
+      - CUDA_VISIBLE_DEVICES=0  # 使用第一块GPU，如果你有多块GPU可以调整
+    volumes:
+      - ./input:/input      # 放入你的PPT/PDF文件
+      - ./output:/output    # 输出的Markdown文件
+      - ./scripts:/app/scripts
+      - ./models:/models    # 缓存模型文件
+    shm_size: '8gb'  # 增加共享内存，有助于模型加载
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1  # 使用1块GPU，如果需要多块可以调整
+              capabilities: [gpu]
