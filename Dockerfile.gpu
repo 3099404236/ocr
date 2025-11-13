@@ -27,27 +27,29 @@ RUN apt-get update && apt-get install -y \
 # 创建软链接
 RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-# 安装PyTorch (CUDA 12.1版本)
+# 配置pip使用清华镜像源（国内速度快）
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip config set global.timeout 300
+
+# 安装PyTorch (CUDA 12.1版本) - 使用官方源
 RUN pip install --no-cache-dir \
     torch==2.5.1 \
     torchvision==0.20.1 \
     torchaudio==2.5.1 \
     --index-url https://download.pytorch.org/whl/cu121
 
-# 安装GOT-OCR 2.0及其依赖
+# 安装GOT-OCR 2.0及其依赖（使用清华镜像）
 RUN pip install --no-cache-dir \
-    transformers==4.37.2 \
-    tiktoken==0.6.0 \
-    verovio==4.3.1 \
-    accelerate==0.28.0 \
+    transformers \
+    tiktoken \
+    verovio \
+    accelerate \
     Pillow \
     pdf2image \
     python-docx
 
 # 安装PaddleOCR GPU版本 (备选引擎)
-RUN pip install --no-cache-dir \
-    paddlepaddle-gpu \
-    paddleocr
+RUN pip install --no-cache-dir paddlepaddle-gpu paddleocr
 
 # 创建输入输出目录
 RUN mkdir -p /input /output /models
